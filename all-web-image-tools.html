@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Tools | MultiTools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .tool-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .tool-card .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+        .tool-container {
+            padding: 20px;
+        }
+        .result-container {
+            margin-top: 20px;
+            display: none;
+        }
+        .preview-img {
+            max-width: 100%;
+            max-height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .ad-banner {
+            background-color: #e9ecef;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px dashed #adb5bd;
+        }
+        .tab-content {
+            padding: 20px 0;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        #imagePreview {
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">MultiTools</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#">Image Tools</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Other Tools</a></li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search tools...">
+                    <button class="btn btn-light" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="ad-banner mb-4">
+            <p>Advertisement Space</p>
+        </div>
+
+        <h1 class="mb-4 text-center">Image Tools</h1>
+
+        <ul class="nav nav-tabs" id="imageToolsTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="png-tab" data-bs-toggle="tab" data-bs-target="#png" type="button">PNG Converter</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="jpg-tab" data-bs-toggle="tab" data-bs-target="#jpg" type="button">JPG Converter</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="resize-tab" data-bs-toggle="tab" data-bs-target="#resize" type="button">Resizer</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="compress-tab" data-bs-toggle="tab" data-bs-target="#compress" type="button">Compressor</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="crop-tab" data-bs-toggle="tab" data-bs-target="#crop" type="button">Cropper</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="base64-tab" data-bs-toggle="tab" data-bs-target="#base64" type="button">Base64</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="webp-tab" data-bs-toggle="tab" data-bs-target="#webp" type="button">WebP to PNG</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gif-tab" data-bs-toggle="tab" data-bs-target="#gif" type="button">GIF Maker</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="qr-tab" data-bs-toggle="tab" data-bs-target="#qr" type="button">QR Generator</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pdf-tab" data-bs-toggle="tab" data-bs-target="#pdf" type="button">Screenshot to PDF</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="imageToolsTabContent">
+            <!-- PNG Converter -->
+            <div class="tab-pane fade show active" id="png" role="tabpanel">
+                <div class="card tool-card">
+                    <div class="card-header">Image to PNG Converter</div>
+                    <div class="card-body">
+                        <div class="tool-container">
+                            <input type="file" id="pngInput" accept="image/*" class="form-control mb-3">
+                            <button id="convertToPngBtn" class="btn btn-primary">Convert to PNG</button>
+                            <div id="pngResult" class="result-container">
+                                <h5>Result:</h5>
+                                <img id="pngPreview" class="preview-img">
+                                <a id="pngDownload" class="btn btn-success mt-2">Download PNG</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JPG Converter -->
+            <div class="tab-pane fade" id="jpg" role="tabpanel">
+                <div class="card tool-card">
+                    <div class="card-header">Image to JPG Converter</div>
+                    <div class="card-body">
+                        <div class="tool-container">
+                            <input type="file" id="jpgInput" accept="image/*" class="form-control mb-3">
+                            <div class="mb-3">
+                                <label for="jpgQuality" class="form-label">Quality (0-1):</label>
+                                <input type="number" id="jpgQuality" min="0" max="1" step="0.1" value="0.9" class="form-control">
+                            </div>
+                            <button id="convertToJpgBtn" class="btn btn-primary">Convert to JPG</button>
+                            <div id="jpgResult" class="result-container">
+                                <h5>Result:</h5>
+                                <img id="jpgPreview" class="preview-img">
+                                <a id="jpgDownload" class="btn btn-success mt-2">Download JPG</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Resizer -->
+            <div class="tab-pane fade" id="resize" role="tabpanel">
+                <div class="card tool-card">
+                    <div class="card-header">Image Resizer</div>
+                    <div class="card-body">
+                        <div class="tool-container">
+                            <input type="file" id="resizeInput" accept="image/*" class="form-control mb-3">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="resizeWidth" class="form-label">Width (px):</label>
+                                    <input type="number" id="resizeWidth" class="form-control">
+                                </div>
+                                <div class="col">
+                                    <label for="resizeHeight" class="form-label">Height (px):</label>
+                                    <input type="number" id="resizeHeight" class="form-control">
+                                </div>
+                            </div>
+                            <button id="resizeBtn" class="btn btn-primary">Resize Image</button>
+                            <div id="resizeResult" class="result-container">
+                                <h5>Result:</h5>
+                                <img id="resizePreview" class="preview-img">
+                                <a id="resizeDownload" class="btn btn-success mt-2">Download Resized Image</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Compressor -->
+            <div class="tab-pane fade" id="compress" role="tabpanel">
+                <div class="card tool-card">
+                    <div class="card-header">Image Compressor</div>
+                    <div class="card-body">
+                        <div class="tool-container">
+                            <input type="file" id="compressInput" accept="image/*" class="form-control mb-3">
+                            <div class="mb-3">
+                                <label for="compressQuality" class="form-label">Quality (0-1):</label>
+                                <input type="number" id="compressQuality" min="0" max="1" step="0.1" value="0.7" class="form-control">
+                            </div>
+                            <button id="compressBtn" class="btn btn-primary">Compress Image</button>
+                            <div id="compressResult" class="result-container">
+                                <h5>Result:</h5>
+                                <img id="compressPreview" class="preview-img">
+                                <div id="compressInfo" class="mb-2"></div>
+                                <a id="compressDownload" class="btn btn-success">Download Compressed Image</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Cropper -->
+            <div class="tab-pane fade" id="crop" role="tabpanel">
+                <div class="card tool-card">
+                    <div class="card-header">Image Cropper</div>
+                    <div class="card-body">
+                        <div class="tool-container">
+                            <input type="file" id="cropInput" accept="image/*" class="form-control mb-3">
+                            <div id="cropAreaContainer" style="display: none;">
+                                <div class="mb-3">
+                                    <label class="form-label">Select area to crop:</label>
+                                    <div style="position: relative;">
+                                        <img id="cropImagePreview" class="preview-img">
+                                        <div id="cropBox" style="position: absolute; border: 2px dashed red; pointer-events: none; display: none;"></div>
+                                    </div>
+                                </div>
+                                <button id="cropBtn" class="btn btn-primary">Crop Image</button>
+                            </div>
+                            <div id="cropResult" class="result-container">
+                                <h5>Result:</h5>
+                                <img id="cropPreview" class="preview-img">
+                                <a id="cropDownload" class="btn btn-success mt-2">Download Cropped Image</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Base64 Converter -->
+            <div class="tab-pane fade" id="base64" role="tabpanel">
+                <div class="card tool-card">
+                    <div class="card-header">Image to Base64 Converter</div>
+                    <div class="card-body">
+                        <div class="tool-container">
+                            <input type="file" id="base64Input" accept="image/*" class="form-control mb-3">
+                            <button id="convertToBase64Btn" class="btn btn-primary">Convert to Base64</button>
+                            <div id="base64Result" class="result-container">
+                                <h5>Result:</h5>
+                                <img id="base64Preview" class="preview-img mb-3">
+                                <textarea id="base64Output" class="form-control" rows="5" readonly></textarea>
+                                <button id="copyBase64Btn" class="btn btn-secondary mt-2">Copy to Clipboard</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WebP to PNG -->
+            <div class="tab-pane fade" id="webp" role="tabpanel">
+                <div class="card tool-card">
+                    <div class="card-header">WebP to PNG Converter</div>
+                    <div class="card-body">
+                        <div class="tool-container">
+                            <input type="file" id="webpInput" accept="image/webp" class="form-control mb-3">
+                            <button id="convertWebpToPngBtn" class="btn btn-primary">Convert to PNG</button>
+                            <div id="webpResult" class="result-container">
+                                <h5>Result:</h5>
+                                <img id="webpPreview" class="preview-img">
+                                <a id="webpDownload" class="btn btn-success mt-2">Download PNG</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GIF Maker -->
+            <div class="tab-pane fade" id="gif" role="tabpanel">
+                <div class="card tool-card">
+                    <div class="card-header">GIF Maker</div>
+                    <div class="card-body">
+                        <div class="tool-container">
+                            <input type="file" id="gifInput" accept="image/*" multiple class="form-control mb-3">
+                            <div class="mb-3">
+                                <label for="gifDelay" class="form-label">Frame Delay (ms):</label>
+                                <input type="number" id="gifDelay" value="100" min="10" class="form-control">
+                            </div>
+                            <button id="createGifBtn" class="btn btn-primary">Create GIF</button>
+                            <div id="gifResult" class="result-container">
+                                <h5>Result:</h5>
+                                <img id="gifPreview" class="preview-img">
+                                <a id="gifDownload" class="btn btn-success mt-2">Download GIF</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QR Code Generator -->
+            <div class="tab-pane fade" id="qr" role="tabpanel">
+                <div class="card tool-card">
+                    <div class="card-header">QR Code Generator</div>
+                    <div class="card-body">
+                        <div class="tool-container">
+                            <div class="mb-3">
+                                <label for="qrText" class="form-label">Text/URL to encode:</label>
+                                <input type="text" id="qrText" class="form-control" placeholder="Enter text or URL">
+                            </div>
+                            <div class="mb-3">
+                                <label for="qrSize" class="form-label">Size (px):</label>
+                                <input type="number" id="qrSize" min="100" max="1000" value="200" class="form-control">
+                            </div>
+                            <button id="generateQrBtn" class="btn btn-primary">Generate QR Code</button>
+                            <div id="qrResult" class="result-container">
+                                <h5>Result:</h5>
+                                <img id="qrPreview" class="preview-img">
+                                <a id="qrDownload" class="btn btn-success mt-2">Download QR Code</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screenshot to PDF -->
+            <div class="tab-pane fade" id="pdf" role="tabpanel">
+                <div class="card tool-card">
+                    <div class="card-header">Screenshot to PDF Converter</div>
+                    <div class="card-body">
+                        <div class="tool-container">
+                            <input type="file" id="pdfInput" accept="image/*" class="form-control mb-3">
+                            <button id="convertToPdfBtn" class="btn btn-primary">Convert to PDF</button>
+                            <div id="pdfResult" class="result-container">
+                                <h5>Result:</h5>
+                                <iframe id="pdfPreview" class="preview-img" style="height: 500px;"></iframe>
+                                <a id="pdfDownload" class="btn btn-success mt-2">Download PDF</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ad-banner mt-4">
+            <p>Advertisement Space</p>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>MultiTools</h5>
+                    <p>Your one-stop solution for all online tools.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Home</a></li>
+                        <li><a href="#" class="text-white">About Us</a></li>
+                        <li><a href="#" class="text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Connect With Us</h5>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-2"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white me-2"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-white me-2"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <p>&copy; 2023 MultiTools. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.js"></script>
+    <script>
+        // Initialize JS PDF
+        const { jsPDF } = window.jspdf;
+
+        // Common function to create canvas from image
+        function createCanvasFromImage(img) {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            return canvas;
+        }
+
+        // PNG Converter
+        document.getElementById('convertToPngBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('pngInput');
+            if (!fileInput.files[0]) {
+                alert('Please select an image first');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = createCanvasFromImage(img);
+                    const pngData = canvas.toDataURL('image/png');
+                    
+                    document.getElementById('pngPreview').src = pngData;
+                    document.getElementById('pngDownload').href = pngData;
+                    document.getElementById('pngDownload').download = 'converted.png';
+                    document.getElementById('pngResult').style.display = 'block';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        });
+
+        // JPG Converter
+        document.getElementById('convertToJpgBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('jpgInput');
+            const quality = parseFloat(document.getElementById('jpgQuality').value);
+            
+            if (!fileInput.files[0]) {
+                alert('Please select an image first');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = createCanvasFromImage(img);
+                    const jpgData = canvas.toDataURL('image/jpeg', quality);
+                    
+                    document.getElementById('jpgPreview').src = jpgData;
+                    document.getElementById('jpgDownload').href = jpgData;
+                    document.getElementById('jpgDownload').download = 'converted.jpg';
+                    document.getElementById('jpgResult').style.display = 'block';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        });
+
+        // Image Resizer
+        document.getElementById('resizeBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('resizeInput');
+            const width = parseInt(document.getElementById('resizeWidth').value);
+            const height = parseInt(document.getElementById('resizeHeight').value);
+            
+            if (!fileInput.files[0]) {
+                alert('Please select an image first');
+                return;
+            }
+            if (!width || !height) {
+                alert('Please enter valid width and height');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const resizedData = canvas.toDataURL();
+                    
+                    document.getElementById('resizePreview').src = resizedData;
+                    document.getElementById('resizeDownload').href = resizedData;
+                    document.getElementById('resizeDownload').download = 'resized.png';
+                    document.getElementById('resizeResult').style.display = 'block';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        });
+
+        // Image Compressor
+        document.getElementById('compressBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('compressInput');
+            const quality = parseFloat(document.getElementById('compressQuality').value);
+            
+            if (!fileInput.files[0]) {
+                alert('Please select an image first');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = createCanvasFromImage(img);
+                    const originalSize = fileInput.files[0].size;
+                    const compressedData = canvas.toDataURL('image/jpeg', quality);
+                    
+                    document.getElementById('compressPreview').src = compressedData;
+                    document.getElementById('compressDownload').href = compressedData;
+                    document.getElementById('compressDownload').download = 'compressed.jpg';
+                    
+                    // Calculate and show compression info
+                    const compressedSize = Math.round(compressedData.length * 0.75); // Approximate base64 to bytes
+                    const reduction = Math.round((1 - compressedSize / originalSize) * 100);
+                    document.getElementById('compressInfo').innerHTML = `
+                        <p>Original size: ${formatBytes(originalSize)}</p>
+                        <p>Compressed size: ${formatBytes(compressedSize)} (${reduction}% reduction)</p>
+                    `;
+                    
+                    document.getElementById('compressResult').style.display = 'block';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        });
+
+        // Helper function to format bytes
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        // Image Cropper
+        let cropStartX, cropStartY, cropEndX, cropEndY;
+        let isCropping = false;
+        const cropBox = document.getElementById('cropBox');
+        const cropImagePreview = document.getElementById('cropImagePreview');
+
+        document.getElementById('cropInput').addEventListener('change', function(e) {
+            if (!e.target.files[0]) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                cropImagePreview.src = e.target.result;
+                document.getElementById('cropAreaContainer').style.display = 'block';
+                
+                // Set up cropping area
+                cropImagePreview.onload = function() {
+                    cropBox.style.display = 'none';
+                };
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        cropImagePreview.addEventListener('mousedown', function(e) {
+            const rect = cropImagePreview.getBoundingClientRect();
+            cropStartX = e.clientX - rect.left;
+            cropStartY = e.clientY - rect.top;
+            isCropping = true;
+            
+            cropBox.style.left = cropStartX + 'px';
+            cropBox.style.top = cropStartY + 'px';
+            cropBox.style.width = '0px';
+            cropBox.style.height = '0px';
+            cropBox.style.display = 'block';
+        });
+
+        cropImagePreview.addEventListener('mousemove', function(e) {
+            if (!isCropping) return;
+            
+            const rect = cropImagePreview.getBoundingClientRect();
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
+            
+            cropBox.style.width = (currentX - cropStartX) + 'px';
+            cropBox.style.height = (currentY - cropStartY) + 'px';
+        });
+
+        cropImagePreview.addEventListener('mouseup', function(e) {
+            if (!isCropping) return;
+            
+            const rect = cropImagePreview.getBoundingClientRect();
+            cropEndX = e.clientX - rect.left;
+            cropEndY = e.clientY - rect.top;
+            isCropping = false;
+        });
+
+        document.getElementById('cropBtn').addEventListener('click', function() {
+            if (!cropStartX || !cropStartY || !cropEndX || !cropEndY) {
+                alert('Please select an area to crop first');
+                return;
+            }
+            
+            const canvas = document.createElement('canvas');
+            const width = Math.abs(cropEndX - cropStartX);
+            const height = Math.abs(cropEndY - cropStartY);
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(
+                cropImagePreview,
+                Math.min(cropStartX, cropEndX),
+                Math.min(cropStartY, cropEndY),
+                width,
+                height,
+                0,
+                0,
+                width,
+                height
+            );
+            
+            const croppedData = canvas.toDataURL();
+            document.getElementById('cropPreview').src = croppedData;
+            document.getElementById('cropDownload').href = croppedData;
+            document.getElementById('cropDownload').download = 'cropped.png';
+            document.getElementById('cropResult').style.display = 'block';
+        });
+
+        // Base64 Converter
+        document.getElementById('convertToBase64Btn').addEventListener('click', function() {
+            const fileInput = document.getElementById('base64Input');
+            if (!fileInput.files[0]) {
+                alert('Please select an image first');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = createCanvasFromImage(img);
+                    const base64Data = canvas.toDataURL().split(',')[1];
+                    
+                    document.getElementById('base64Preview').src = e.target.result;
+                    document.getElementById('base64Output').value = base64Data;
+                    document.getElementById('base64Result').style.display = 'block';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        });
+
+        document.getElementById('copyBase64Btn').addEventListener('click', function() {
+            const base64Output = document.getElementById('base64Output');
+            base64Output.select();
+            document.execCommand('copy');
+            alert('Base64 copied to clipboard!');
+        });
+
+        // WebP to PNG
+        document.getElementById('convertWebpToPngBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('webpInput');
+            if (!fileInput.files[0]) {
+                alert('Please select a WebP image first');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = createCanvasFromImage(img);
+                    const pngData = canvas.toDataURL('image/png');
+                    
+                    document.getElementById('webpPreview').src = pngData;
+                    document.getElementById('webpDownload').href = pngData;
+                    document.getElementById('webpDownload').download = 'converted.png';
+                    document.getElementById('webpResult').style.display = 'block';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        });
+
+        // GIF Maker
+        document.getElementById('createGifBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('gifInput');
+            const delay = parseInt(document.getElementById('gifDelay').value);
+            
+            if (!fileInput.files || fileInput.files.length < 2) {
+                alert('Please select at least 2 images to create a GIF');
+                return;
+            }
+
+            const gif = new GIF({
+                workers: 2,
+                quality: 10,
+                width: 300,
+                height: 300,
+                workerScript: 'https://cdn.jsdelivr.net/npm/gif.js/dist/gif.worker.js'
+            });
+
+            const files = Array.from(fileInput.files);
+            let loadedCount = 0;
+            
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 300;
+                        canvas.height = 300;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, 300, 300);
+                        gif.addFrame(canvas, { delay: delay });
+                        
+                        loadedCount++;
+                        if (loadedCount === files.length) {
+                            gif.render();
+                        }
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            gif.on('finished', function(blob) {
+                const gifUrl = URL.createObjectURL(blob);
+                document.getElementById('gifPreview').src = gifUrl;
+                document.getElementById('gifDownload').href = gifUrl;
+                document.getElementById('gifDownload').download = 'animation.gif';
+                document.getElementById('gifResult').style.display = 'block';
+            });
+        });
+
+        // QR Code Generator
+        document.getElementById('generateQrBtn').addEventListener('click', function() {
+            const text = document.getElementById('qrText').value;
+            const size = document.getElementById('qrSize').value;
+            
+            if (!text) {
+                alert('Please enter text or URL to encode');
+                return;
+            }
+
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}`;
+            document.getElementById('qrPreview').src = qrUrl;
+            document.getElementById('qrDownload').href = qrUrl;
+            document.getElementById('qrDownload').download = 'qrcode.png';
+            document.getElementById('qrResult').style.display = 'block';
+        });
+
+        // Screenshot to PDF
+        document.getElementById('convertToPdfBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('pdfInput');
+            if (!fileInput.files[0]) {
+                alert('Please select an image first');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const pdf = new jsPDF({
+                        orientation: img.width > img.height ? 'landscape' : 'portrait',
+                        unit: 'mm'
+                    });
+                    
+                    // Calculate dimensions to fit A4 page
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+                    const ratio = Math.min(pageWidth / img.width, pageHeight / img.height) * 0.95;
+                    const width = img.width * ratio;
+                    const height = img.height * ratio;
+                    const x = (pageWidth - width) / 2;
+                    const y = (pageHeight - height) / 2;
+                    
+                    pdf.addImage(img.src, 'JPEG', x, y, width, height);
+                    const pdfUrl = pdf.output('bloburl');
+                    
+                    document.getElementById('pdfPreview').src = pdfUrl;
+                    document.getElementById('pdfDownload').href = pdfUrl;
+                    document.getElementById('pdfDownload').download = 'screenshot.pdf';
+                    document.getElementById('pdfResult').style.display = 'block';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        });
+    </script>
+</body>
+</html>
